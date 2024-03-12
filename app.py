@@ -38,12 +38,14 @@ def main():
 
         # Get the gesture from hand recognizer
         _, gesture = hand_recognizer.get_gesture(image, debug=True)
+        print(gesture)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # Implement gesture actions
         if gesture == 'Pointing Right':
-            pyautogui.scroll(100)  # Scroll up to zoom in
+            pyautogui.scroll(1)  # Scroll up to zoom in
         elif gesture == 'Pointing Left':
-            pyautogui.scroll(-100)  # Scroll down to zoom out
+            pyautogui.scroll(-1)  # Scroll down to zoom out
         elif gesture == 'Closed Palm':
             if not dragging:
                 pyautogui.mouseDown()  # Start dragging
@@ -57,8 +59,6 @@ def main():
                 dragging = False
 
         # Display the gesture on the image
-        #and transform from BGR to RGB
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.putText(image, gesture if gesture else '', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
         cv2.imshow('Hand Gesture Recognition', cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
         
