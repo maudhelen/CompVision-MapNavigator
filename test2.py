@@ -27,7 +27,7 @@ def get_thumb_orientation(hand_landmarks):
 
     if thumb_tip.x < index_tip.x:
         return "Left"
-    elif thumb_tip.x > index_tip.x:
+    elif thumb_tip.x > index_tip.x and thumb_tip.y < index_tip.y:
         return "Right"
     elif thumb_tip.y > index_tip.y:
         return "Up"
