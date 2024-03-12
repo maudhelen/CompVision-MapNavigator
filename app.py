@@ -10,11 +10,11 @@ from collections import deque
 import cv2 as cv
 import numpy as np
 import mediapipe as mp
+import webbrowser
 
 from utils import CvFpsCalc
 from model import KeyPointClassifier
 from model import PointHistoryClassifier
-
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -97,6 +97,7 @@ def main():
 
     #  ########################################################################
     mode = 0
+    webbrowser.open('https://www.google.com/maps/@?api=1&map_action=map&basemap=satellite')
 
     while True:
         fps = cvFpsCalc.get()
@@ -168,6 +169,8 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]],
                 )
+                # Use the hand gestuer to convert gestures to map control
+                
         else:
             point_history.append([0, 0])
 
@@ -191,6 +194,8 @@ def select_mode(key, mode):
         mode = 1
     if key == 104:  # h
         mode = 2
+    if key == 115:  # s
+        mode = 3
     return number, mode
 
 
@@ -291,6 +296,9 @@ def logging_csv(number, mode, landmark_list, point_history_list):
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
             writer.writerow([number, *point_history_list])
+    if mode == 3 and (0 <= number <= 9):
+        # return landmark_list, point_history_list so that we can use it to control the map
+        return landmark_list, point_history_list
     return
 
 
