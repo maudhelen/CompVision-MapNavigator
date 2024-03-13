@@ -70,10 +70,10 @@ class HandGesture:
             tuple: (is_pointing, direction) - True if pointing, False otherwise; direction (string) if pointing
         """
         # Determine if the hand is pointing by checking the index finger's position relative to other fingers
-        if hand_landmarks[8].y < hand_landmarks[6].y and \
-        hand_landmarks[12].y > hand_landmarks[10].y and \
-        hand_landmarks[16].y > hand_landmarks[14].y and \
-        hand_landmarks[20].y > hand_landmarks[18].y:
+        if (hand_landmarks[8].y < hand_landmarks[5].y or hand_landmarks[8].x < hand_landmarks[6].x) and \
+        (hand_landmarks[12].y > hand_landmarks[10].y or hand_landmarks[12].x > hand_landmarks[10].x) and \
+        (hand_landmarks[16].y > hand_landmarks[14].y or hand_landmarks[16].x > hand_landmarks[14].x) and \
+        (hand_landmarks[20].y > hand_landmarks[18].y or hand_landmarks[20].x > hand_landmarks[18].x):
             # Hand is pointing - determine direction
             # Calculate angle of index finger with respect to horizontal
             # Note: Inverting y_diff since y-coordinates increase downwards in image coordinates
