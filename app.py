@@ -10,6 +10,9 @@ from hand_gesture import HandGesture
 # Initialize the hand gesture recognition
 hand_gesture = HandGesture()
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
 
 dragging = False
 previous_hand_landmarks = None
