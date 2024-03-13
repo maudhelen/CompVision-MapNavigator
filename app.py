@@ -73,7 +73,7 @@ while True:
                     pyautogui.moveTo(screen_x, screen_y)
                 elif point:
                     if direction == "Up": #Dont do anything
-                        pyautogui.mouseUp(button='left')
+                        # pyautogui.mouseUp(button='left')
                         gesture = f"Pointing {direction}"
                     elif direction == "Left": #scroll down
                         pyautogui.scroll(-1)
