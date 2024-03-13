@@ -1,9 +1,6 @@
 # CompVision-MapNavigator
 The purpose of the project is to build a program which will take some hand gestures to navigate in a computer. For the sake of the example we will use it to neviagte through Google Maps.
 
-To run the model just type
-`python3 app.py 
-
 ## Hand Gestures Guide
 
 <table>
@@ -20,7 +17,7 @@ To run the model just type
       <img src="images/annotated_open.jpg" alt="Open Palm" style="width:200px;"/>
     </td>
     <td>
-      Open Palm will move the cursor.
+      Open Palm will simulate releasing the left mouse click.
     </td>
   </tr>
   <tr>
