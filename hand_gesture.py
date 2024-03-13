@@ -1,6 +1,7 @@
 import numpy as np
 import mediapipe as mp
 import cv2
+import math
 
 """ 
 This class decides the hand gestures based on the landmarks of the hand and the logic we decide to use.
@@ -35,21 +36,30 @@ class HandGesture:
         return True
     
     @staticmethod
-    def pointing_right(hand_landmarks):
-        #check of middle, ring and pinky fingers are below the index finger
-        if hand_landmarks[12].y > hand_landmarks[8].y and hand_landmarks[16].y > hand_landmarks[8].y and hand_landmarks[20].y > hand_landmarks[8].y:
-            #check if the index finger is to the left of the middle finger
-            if hand_landmarks[8].x < hand_landmarks[12].x:
-                return True
-        return False
-    
-    @staticmethod
-    def pointing_left(hand_landmarks):
-        if hand_landmarks[12].y > hand_landmarks[8].y and hand_landmarks[16].y > hand_landmarks[8].y and hand_landmarks[20].y > hand_landmarks[8].y:
-            #check if the index finger is to the left of the middle finger
-            if hand_landmarks[8].x > hand_landmarks[12].x:
-                return True
-        return False
+    def is_pointing(hand_landmarks):
+        # Determine if the hand is pointing by checking the index finger's position relative to other fingers
+        if hand_landmarks[8].y < hand_landmarks[6].y and \
+        hand_landmarks[12].y > hand_landmarks[10].y and \
+        hand_landmarks[16].y > hand_landmarks[14].y and \
+        hand_landmarks[20].y > hand_landmarks[18].y:
+            # Hand is pointing - determine direction
+            # Calculate angle of index finger with respect to horizontal
+            # Note: Inverting y_diff since y-coordinates increase downwards in image coordinates
+            x_diff = hand_landmarks[8].x - hand_landmarks[5].x
+            y_diff = hand_landmarks[5].y - hand_landmarks[8].y  # Inverted
+            angle = math.atan2(y_diff, x_diff) * (180.0 / math.pi)
+
+            # Determine direction based on angle
+            if -45 <= angle <= 45:
+                return True, 'Left'
+            elif 135 <= angle or angle <= -135:
+                return True, 'Right'
+            elif 45 < angle < 135:
+                return True, 'Up' 
+        
+        # Hand is not pointing
+        return False, None
+
     
     @staticmethod
     def is_dragging(hand_landmarks, previous_hand_landmarks):
@@ -88,7 +98,6 @@ class HandGesture:
         return avg_x, avg_y
         
         
-
     def process_image(self, image):
         image_rgb = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb)
