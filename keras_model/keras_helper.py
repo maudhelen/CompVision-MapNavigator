@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import mediapipe as mp
 import pyautogui
 import itertools
@@ -16,34 +15,43 @@ class HandGestureRecognition:
         )
 
     @staticmethod
-    def handle_gesture_actions(hand_sign_id, screen_x, screen_y, dragging, most_common_fg_id):
-        if hand_sign_id == 1 and not dragging:  # Closed Palm = start drag
-            pyautogui.mouseDown(screen_x, screen_y)
-            dragging = True
-        elif hand_sign_id == 0 and dragging:  # Open Palm = stop drag
-            pyautogui.mouseUp(screen_x, screen_y)
-            dragging = False
-        elif dragging:  # Continue Dragging
-            pyautogui.moveTo(screen_x, screen_y)
-        elif hand_sign_id == 0 and not dragging:  # Open Palm = move without dragging
-            pyautogui.moveTo(screen_x, screen_y)
-        elif hand_sign_id == 2:  # Pointing = zoom in or out
-            if dragging:
+    def handle_gesture_actions(hand_sign_id, screen_x, screen_y, dragging, classifiedhistorypoint):
+        # Ensure the initial state of dragging is updated correctly within the function
+
+        dragging = dragging
+
+        if hand_sign_id == 1 and not dragging:
+                # Closed Palm = start drag
+                pyautogui.mouseDown(screen_x, screen_y)
+                dragging = True
+        elif hand_sign_id == 0 and dragging:
+                # Open Palm = stop drag
                 pyautogui.mouseUp(screen_x, screen_y)
                 dragging = False
-            else:
-                # wait for either counter clockwise or clockwise gesture
-                if most_common_fg_id[0][0] == 0 or most_common_fg_id[0][0] == 3:
-                    # make sure the mouse button is not pressed and wait for movement
-                    pyautogui.mouseUp(screen_x, screen_y)
-                    dragging = False
-                # Temporarily disable dragging for zooming action
-                # Execute zoom based on the most common finger gesture
-                if most_common_fg_id[0][0] == 1:  # Assuming 1 = zoom in gesture ID
-                    pyautogui.scroll(1)
-                elif most_common_fg_id[0][0] == 2:  # Assuming 2 = zoom out gesture ID
-                    pyautogui.scroll(-1)
+        elif hand_sign_id == 0 and not dragging:
+                # Open Palm = move without dragging
+                pyautogui.moveTo(screen_x, screen_y)
+        elif dragging:
+                # If dragging, continue moving the mouse to the new position
+                pyautogui.moveTo(screen_x, screen_y)
+        elif hand_sign_id == 2:
+                # Pointing = zoom in or out, ensure dragging is not considered for zoom actions
+                if dragging:
+                # If currently dragging, stop drag before zooming
+                        pyautogui.mouseUp(screen_x, screen_y)
+                        dragging = False
+                
+                # Zoom based on the most common finger gesture
+                if classifiedhistorypoint == "Clockwise":  # Assuming 1 = zoom in gesture ID
+                        # using zooming in and out
+                        pyautogui.scroll(1)
+                elif classifiedhistorypoint == "Counter Clockwise":  # Assuming 2 = zoom out gesture ID
+                        pyautogui.scroll(-1)
+
         return dragging
+
+
+
 
     @staticmethod
     def calc_landmark_list(image, handLms):
@@ -298,7 +306,3 @@ class HandGestureRecognition:
         temp_landmark_list = list(map(normalize_, temp_landmark_list))
 
         return temp_landmark_list
-
-
-
-    
