@@ -1,3 +1,7 @@
+""" 
+Main file that uses the HandGesture class to recognize hand gestures and control the mouse.
+"""
+
 import cv2
 import pyautogui
 import numpy as np
@@ -7,7 +11,6 @@ from hand_gesture import HandGesture
 hand_gesture = HandGesture()
 cap = cv2.VideoCapture(0)
 
-last_position = None
 dragging = False
 previous_hand_landmarks = None
 
@@ -47,12 +50,9 @@ while True:
                     pyautogui.moveTo(screen_x, screen_y)
                 elif closed_palm:
                     gesture = "Closed Palm"
-                    pyautogui.mouseDown(screen_x, screen_y, button='left')
+                    #pyautogui.mouseDown(screen_x, screen_y, button='left')
                 if open_palm:
-                    gesture = "Open Palm"
-                    if dragging:
-                        pyautogui.mouseUp()
-                        dragging = False
+                    dragging = False
                     pyautogui.mouseUp()
                     pyautogui.moveTo(screen_x, screen_y)
                 elif point:
@@ -65,7 +65,7 @@ while True:
                         pyautogui.scroll(1)
                         
             else:
-                gesture = ""
+                gesture = "Unknown"
 
             previous_hand_landmarks = landmarks
 
