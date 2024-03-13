@@ -1,3 +1,7 @@
+""" 
+Main file that uses the HandGesture class to recognize hand gestures and control the mouse.
+"""
+
 import cv2
 import pyautogui
 import numpy as np
@@ -7,7 +11,6 @@ from hand_gesture import HandGesture
 hand_gesture = HandGesture()
 cap = cv2.VideoCapture(0)
 
-last_position = None
 dragging = False
 previous_hand_landmarks = None
 
