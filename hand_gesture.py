@@ -160,6 +160,6 @@ class HandGesture:
         Returns:
             list: detected hand landmarks for each ahnd in the image
         """
-        image_rgb = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb)
         return results.multi_hand_landmarks
