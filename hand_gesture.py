@@ -11,6 +11,10 @@ Since we decide the hand gestures are more intuitive without flipping the image,
 
 class HandGesture:
     def __init__(self):
+        """
+        Initializes the HandGesture object with MediaPiep's hand detection model
+        Sets the model to detect only the first hand in the imahe with a certain confidence
+        """
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
             static_image_mode=False,
@@ -21,6 +25,16 @@ class HandGesture:
     
     @staticmethod
     def is_palm_open(hand_landmarks):
+        """
+        Determines if the palm is open based on the landmarks of the hand.
+        Main logic here is position of tips of fingers relative to the joints of the fingers.
+
+        Args:
+            hand_landmarks (list): List of landmark points from Media Pipe Hands
+
+        Returns:
+            bool: True if the palm is open, False otherwise
+        """
         #check if the tip of all fingers is above the joint of all fingers (except thumb)
         for tip, joint in [(8, 6), (12, 10), (16, 14), (20, 18)]:
             if hand_landmarks[tip].y > hand_landmarks[joint].y:
@@ -30,6 +44,14 @@ class HandGesture:
     @staticmethod
     # Make sure is_palm_closed is an instance method, not a static method.
     def is_palm_closed(hand_landmarks):
+        """Same logic as is_palm_open but inverted.
+
+        Args:
+            hand_landmarks (list): landmark points
+
+        Returns:
+            bool: True if the palm is closed, False otherwise
+        """
         for tip, joint in [(8, 6), (12, 10), (16, 14), (20, 18)]:
             if hand_landmarks[tip].y < hand_landmarks[joint].y: #if the tip of all fingers is below the joint of all fingers (except thumb), then the palm is closed
                 return False
@@ -37,6 +59,16 @@ class HandGesture:
     
     @staticmethod
     def is_pointing(hand_landmarks):
+        """
+        Determines of the hans is pointing and identifies the direction of the point based on the angle
+        Determined by orientation of index finger and position of middle, ring and pinky
+
+        Args:
+            hand_landmarks (list): Landmark points
+
+        Returns:
+            tuple: (is_pointing, direction) - True if pointing, False otherwise; direction (string) if pointing
+        """
         # Determine if the hand is pointing by checking the index finger's position relative to other fingers
         if hand_landmarks[8].y < hand_landmarks[6].y and \
         hand_landmarks[12].y > hand_landmarks[10].y and \
@@ -63,6 +95,17 @@ class HandGesture:
     
     @staticmethod
     def is_dragging(hand_landmarks, previous_hand_landmarks):
+        """
+        Determines while the hand is "dragging" (moving while closed)
+        This requires comparing the current hand position with the previous hand position
+
+        Args:
+            hand_landmarks (list): Landmark points
+            previous_hand_landmarks (list): previous Landmark points
+
+        Returns:
+            bool: True if dragging, False otherwise
+        """
         # If there's no previous data, assume not dragging
         if not previous_hand_landmarks:
             return False
@@ -88,6 +131,15 @@ class HandGesture:
     
     @staticmethod
     def get_position(hand_landmarks):
+        """
+        Calculates the avergae position of all hand landmark points to determine the center of the hand
+
+        Args:
+            hand_landmarks (list): Landmark points
+
+        Returns:
+            tuple (avg_x, avg_y): representing the center of the hand
+        """
         # We'll average the coordinates of all landmarks to find the center
         x_coords = [landmark.x for landmark in hand_landmarks]
         y_coords = [landmark.y for landmark in hand_landmarks]
@@ -99,6 +151,15 @@ class HandGesture:
         
         
     def process_image(self, image):
+        """
+        Processes an image, in this case color conversion and flipping
+
+        Args:
+            image: The image in which to detect hands
+
+        Returns:
+            list: detected hand landmarks for each ahnd in the image
+        """
         image_rgb = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb)
         return results.multi_hand_landmarks
