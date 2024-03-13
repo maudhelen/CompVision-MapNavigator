@@ -6,6 +6,7 @@ import cv2
 import pyautogui
 import numpy as np
 from hand_gesture import HandGesture
+import mediapipe as mp
 import webbrowser
 import time
 
@@ -25,6 +26,10 @@ screen_width, screen_height = pyautogui.size()
 fps_limit = 10
 timeperframe = 1 / fps_limit   
 prevtime = time.time()
+
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 while True:
     currenttime = time.time()
@@ -52,7 +57,13 @@ while True:
             screen_x = np.interp(current_position[0], [0, 1], [screen_width, 0])
             screen_y = np.interp(current_position[1], [0, 1], [0, screen_height])
 
-
+            mp_drawing.draw_landmarks(
+                image,
+                handLms,
+                mp_hands.HAND_CONNECTIONS,
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style())
+            
             if not gesture:  # Only check for other gestures if no current gesture detected
                 closed_palm = hand_gesture.is_palm_closed(landmarks)
                 open_palm = hand_gesture.is_palm_open(landmarks)
