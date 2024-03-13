@@ -71,6 +71,7 @@ def main():
     while True:
         ret, image = cap.read()
         image = cv2.flip(image, 1)
+        image =  cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         if not ret:
             continue
 
