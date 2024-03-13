@@ -3,22 +3,12 @@ from keras_helper import HandGestureRecognition
 import pyautogui
 import webbrowser
 import argparse
-from model import KeyPointClassifier
-from model import PointHistoryClassifier
+from model import PointHistoryClassifier, KeyPointClassifier
 import csv
 import copy
 import numpy as np
 from collections import deque, Counter
-import os
 
-# Print the current working directory
-path = os.getcwd() + '/keras_model/'
-model_path = path + os.path.join("model", "keypoint_classifier", "keypoint_classifier.tflite")
-
-print("\nModel path: ", model_path)
-
-full_path = os.path.realpath(__file__)
-print("\nFull path: ", full_path)
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -38,18 +28,19 @@ def main():
     args = get_args()
 
     # Initalise and opn the models / classes
-    keypoint_classifier = KeyPointClassifier(model_path=model_path)
+    keypoint_classifier = KeyPointClassifier()
     point_history_classifier = PointHistoryClassifier()
     hgr = HandGestureRecognition()
     
-    with open(model_path,
+    with open('keras_model/model/keypoint_classifier/keypoint_classifier_label.csv',
               encoding='utf-8-sig') as f:
         keypoint_classifier_labels = csv.reader(f)
         keypoint_classifier_labels = [
             row[0] for row in keypoint_classifier_labels
         ]
 
-    with open(model_path,
+    with open(
+            'keras_model/model/point_history_classifier/point_history_classifier_label.csv',
             encoding='utf-8-sig') as f:
         point_history_classifier_labels = csv.reader(f)
         point_history_classifier_labels = [
@@ -140,8 +131,8 @@ def main():
         most_common_fg_id_names = ['Stop', 'Clockwise', 'Counter Clockwise', 'Move']
 
         if hand_sign_id is not None:
-            print(hand_sign_id, hand_sign_id_names[hand_sign_id])
-            print(classifiedhistorypoint, most_common_fg_id_names[most_common_fg_id[0][0]])
+            print("Hand id and name",hand_sign_id, hand_sign_id_names[hand_sign_id])
+            print('point history name and id',classifiedhistorypoint, most_common_fg_id_names[most_common_fg_id[0][0]])
 
         # Display the gesture on the image
         handsignname = hand_sign_id_names[hand_sign_id] if hand_sign_id is not None else '0'
