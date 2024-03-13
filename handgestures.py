@@ -12,6 +12,52 @@ class HandGestureRecognition:
             min_tracking_confidence=0.5,
         )
 
+    def distance(a, b):
+        return ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) ** 0.5
+
+    def get_gesture2(self, image, debug=False):
+        threshold = 0.5
+        lower_threshold = 0.3
+        close_threshold = 0.1
+        image_height, image_width, _ = image.shape
+        image_rgb = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+        results = self.hands.process(image_rgb)
+
+        gesture = None
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+
+                # Assuming 'hand_landmarks' is a single hand's landmarks
+                thumb_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_TIP]
+                index_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                middle_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP]
+                ring_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.RING_FINGER_TIP]
+                pinky_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.PINKY_TIP]
+                wrist = hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST]
+                index_base = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_MCP]
+
+                # Check for open palm
+                if HandGestureRecognition.distance(index_tip, middle_tip) > threshold and HandGestureRecognition.distance(index_tip, wrist) > lower_threshold:
+                    gesture =  "Open Palm"
+
+                # Check for closed palm/hand
+                if all(HandGestureRecognition.distance(fingertip, wrist) < close_threshold for fingertip in [thumb_tip, index_tip, middle_tip, ring_tip, pinky_tip]):
+                    gesture = "Closed Palm"
+
+                # Check for pointing up
+                if index_tip.y < index_base.y and all(fingertip.y > index_base.y for fingertip in [middle_tip, ring_tip, pinky_tip]):
+                    gesture = "Pointing Up"
+
+                # Check for pointing down
+                if index_tip.y > index_base.y and all(fingertip.y < index_base.y for fingertip in [middle_tip, ring_tip, pinky_tip]):
+                    gesture = "Pointing Down"
+
+                else:
+                    gesture = "Unknown"
+
+        return image, gesture
+
+
     def get_gesture(self, image, debug=False):
         image_height, image_width, _ = image.shape
         image_rgb = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
