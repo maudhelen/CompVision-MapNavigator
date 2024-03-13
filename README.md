@@ -17,7 +17,7 @@ The purpose of the project is to build a program which will take some hand gestu
       <img src="images/annotated_open.jpg" alt="Open Palm" style="width:200px;"/>
     </td>
     <td>
-      Open Palm will simulate releasing the left mouse click.
+      Open Palm will move the cursor.
     </td>
   </tr>
   <tr>
