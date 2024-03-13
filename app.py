@@ -10,6 +10,9 @@ from hand_gesture import HandGesture
 # Initialize the hand gesture recognition
 hand_gesture = HandGesture()
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
 
 dragging = False
 previous_hand_landmarks = None
@@ -50,19 +53,22 @@ while True:
                     pyautogui.moveTo(screen_x, screen_y)
                 elif closed_palm:
                     gesture = "Closed Palm"
-                    #pyautogui.mouseDown(screen_x, screen_y, button='left')
+                    # pyautogui.mouseDown(screen_x, screen_y, button='left')
                 if open_palm:
                     dragging = False
+                    gesture = "Open Palm"
                     pyautogui.mouseUp()
                     pyautogui.moveTo(screen_x, screen_y)
                 elif point:
-                    gesture = f"Pointing {direction}"
                     if direction == "Up": #Dont do anything
                         pyautogui.mouseUp(button='left')
+                        gesture = f"Pointing {direction}"
                     elif direction == "Left": #scroll down
                         pyautogui.scroll(-1)
+                        gesture = f"Pointing {direction}"
                     elif direction == "Right": #scroll up
                         pyautogui.scroll(1)
+                        gesture = f"Pointing {direction}"
                         
             else:
                 gesture = "Unknown"
