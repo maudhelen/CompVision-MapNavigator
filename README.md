@@ -1,5 +1,20 @@
 # CompVision-MapNavigator
 The purpose of the project is to build a program which will take some hand gestures to navigate in a computer. For the sake of the example we will use it to neviagte through Google Maps.
+We chose to go forward with two different models to see the differences between them
+
+Before starting either, remember to initialize your virtual environment and run `pip install requirements.txt`
+
+1. ### **Media Pipe model**
+  - To run this one `python3 app.py`
+  - [Jump to guide](#mediapipe-model)
+
+    
+2. ### **Keras model**
+  - To run the keras model `python3 keras_app.py`
+  - Guide
+**Hand Gestures vary for each model**
+
+# MediaPipe Model
 
 ## Hand Gestures Guide
 
@@ -42,6 +57,9 @@ The purpose of the project is to build a program which will take some hand gestu
 
 
 ## Architecture
+
+
+# Keras Model
 
 
 
