@@ -47,12 +47,9 @@ while True:
                     pyautogui.moveTo(screen_x, screen_y)
                 elif closed_palm:
                     gesture = "Closed Palm"
-                    pyautogui.mouseDown(screen_x, screen_y, button='left')
+                    #pyautogui.mouseDown(screen_x, screen_y, button='left')
                 if open_palm:
-                    gesture = "Open Palm"
-                    if dragging:
-                        pyautogui.mouseUp()
-                        dragging = False
+                    dragging = False
                     pyautogui.mouseUp()
                     pyautogui.moveTo(screen_x, screen_y)
                 elif point:
@@ -65,7 +62,7 @@ while True:
                         pyautogui.scroll(1)
                         
             else:
-                gesture = ""
+                gesture = "Unknown"
 
             previous_hand_landmarks = landmarks
 
