@@ -12,6 +12,7 @@ Before starting either, remember to initialize your virtual environment and run 
 2. ### **Keras model**
   - To run the keras model `python3 keras_app.py`
   - Guide
+    
 **Hand Gestures vary for each model**
 
 # MediaPipe Model
