@@ -65,7 +65,7 @@ while True:
                         pyautogui.scroll(1)
                         
             else:
-                gesture = "Unknown gesture"
+                gesture = ""
 
             previous_hand_landmarks = landmarks
 
