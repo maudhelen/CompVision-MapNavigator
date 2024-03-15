@@ -32,7 +32,7 @@ def main():
     point_history_classifier = PointHistoryClassifier()
     hgr = HandGestureRecognition()
     
-    with open('model/keypoint_classifier/keypoint_classifier_label.csv',
+    with open('keras_model/model/keypoint_classifier/keypoint_classifier_label.csv',
               encoding='utf-8-sig') as f:
         keypoint_classifier_labels = csv.reader(f)
         keypoint_classifier_labels = [
@@ -40,7 +40,7 @@ def main():
         ]
 
     with open(
-            'model/point_history_classifier/point_history_classifier_label.csv',
+            'keras_model/model/point_history_classifier/point_history_classifier_label.csv',
             encoding='utf-8-sig') as f:
         point_history_classifier_labels = csv.reader(f)
         point_history_classifier_labels = [
@@ -131,8 +131,8 @@ def main():
         most_common_fg_id_names = ['Stop', 'Clockwise', 'Counter Clockwise', 'Move']
 
         if hand_sign_id is not None:
-            print(hand_sign_id, hand_sign_id_names[hand_sign_id])
-            print(classifiedhistorypoint, most_common_fg_id_names[most_common_fg_id[0][0]])
+            print("Hand id and name",hand_sign_id, hand_sign_id_names[hand_sign_id])
+            print('point history name and id',classifiedhistorypoint, most_common_fg_id_names[most_common_fg_id[0][0]])
 
         # Display the gesture on the image
         handsignname = hand_sign_id_names[hand_sign_id] if hand_sign_id is not None else '0'

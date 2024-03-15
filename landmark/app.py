@@ -6,6 +6,9 @@ import cv2
 import pyautogui
 import numpy as np
 from hand_gesture import HandGesture
+import mediapipe as mp
+import webbrowser
+import time
 
 # Initialize the hand gesture recognition
 hand_gesture = HandGesture()
@@ -13,11 +16,27 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
+webbrowser.open('https://www.google.com/maps/@?api=1&map_action=map&basemap=satellite')
 
 dragging = False
 previous_hand_landmarks = None
+screen_width, screen_height = pyautogui.size()
+
+# FPS Stuff
+fps_limit = 10
+timeperframe = 1 / fps_limit   
+prevtime = time.time()
+
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 while True:
+    currenttime = time.time()
+    if currenttime - prevtime < timeperframe:
+        continue
+    prevtime = currenttime
+    
     ret, image = cap.read()
     if not ret:
         break
@@ -30,9 +49,7 @@ while True:
         for handLms in hand_landmarks_list:
             landmarks = [landmark for landmark in handLms.landmark]
             current_position = hand_gesture.get_position(landmarks)
-            screen_width, screen_height = pyautogui.size()
             x, y = pyautogui.position()
-
             if previous_hand_landmarks:
                 dragging = hand_gesture.is_dragging(landmarks, previous_hand_landmarks)
 
@@ -40,7 +57,13 @@ while True:
             screen_x = np.interp(current_position[0], [0, 1], [screen_width, 0])
             screen_y = np.interp(current_position[1], [0, 1], [0, screen_height])
 
-
+            mp_drawing.draw_landmarks(
+                image,
+                handLms,
+                mp_hands.HAND_CONNECTIONS,
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style())
+            
             if not gesture:  # Only check for other gestures if no current gesture detected
                 closed_palm = hand_gesture.is_palm_closed(landmarks)
                 open_palm = hand_gesture.is_palm_open(landmarks)
@@ -61,7 +84,7 @@ while True:
                     pyautogui.moveTo(screen_x, screen_y)
                 elif point:
                     if direction == "Up": #Dont do anything
-                        pyautogui.mouseUp(button='left')
+                        # pyautogui.mouseUp(button='left')
                         gesture = f"Pointing {direction}"
                     elif direction == "Left": #scroll down
                         pyautogui.scroll(-1)
