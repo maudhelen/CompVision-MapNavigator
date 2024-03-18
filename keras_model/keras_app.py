@@ -125,6 +125,7 @@ def main():
                 dragging = hgr.handle_gesture_actions(hand_sign_id, screen_x, screen_y, dragging, classifiedhistorypoint)
 
         else:
+            # If no hand is detected, add a 0,0 point to the point history so we can track the movement
             point_history.append([0, 0])
 
         hand_sign_id_names = ['Open', 'Close', 'Pointer', 'OK']
