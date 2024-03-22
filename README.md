@@ -11,7 +11,7 @@ Before starting either, remember to initialize your virtual environment and run 
     
 ### 2. **Keras model**
   - To run the keras model `python3 keras_app.py`
-  - - [Jump to guide](#keras-model)
+  - [Jump to guide](#keras-model)
     
 **Hand Gestures vary for each model**
 
