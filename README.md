@@ -53,7 +53,7 @@ The architecture of the MediaPipe Hands model comprises several key components:
       <img src="images/annotated_right2.jpg" alt="Pointing Right 2" style="width:200px;"/>
     </td>
     <td>
-      <b>Pointing Right</b> will simulate scrolling to the right or zooming in.
+      <b>Pointing Right</b> will simulate scrolling in or zooming in.
     </td>
   </tr>
   <tr>
@@ -62,7 +62,7 @@ The architecture of the MediaPipe Hands model comprises several key components:
       <img src="images/annotated_left2.jpg" alt="Pointing Left 2" style="width:200px;"/>
     </td>
     <td>
-      <b>Pointing Left</b> will simulate scrolling to the left or zooming out.
+      <b>Pointing Left</b> will simulate scrolling out or zooming out.
     </td>
   </tr>
 </table>
